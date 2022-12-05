@@ -1,0 +1,2092 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.27.0",
+        "title": "Meraki Dashboard API",
+        "description": "The Cisco Meraki Dashboard API is a modern REST API based on the OpenAPI specification.\n\n> Date: 02 November, 2022\n>\n> [Recent Updates](https://meraki.io/whats-new/)\n\n---\n\n[API Documentation](https://meraki.io/api)\n\n[Community Support](https://meraki.io/community)\n\n[Meraki Homepage](https://www.meraki.com)\n",
+        "contact": {
+            "name": "Meraki Developer Community",
+            "url": "https://meraki.io/community"
+        }
+    },
+    "host": "api.meraki.com",
+    "basePath": "/api/v1",
+    "schemes": [
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "meraki_api_key": {
+            "type": "apiKey",
+            "name": "X-Cisco-Meraki-API-Key",
+            "in": "header"
+        }
+    },
+    "security": [
+        {
+            "meraki_api_key": []
+        }
+    ],
+    "paths": {
+        "/administered/identities/me": {
+            "get": {
+                "description": "Returns the identity of the current user.",
+                "operationId": "getAdministeredIdentitiesMe",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "Username"
+                                },
+                                "email": {
+                                    "type": "string",
+                                    "description": "User email"
+                                },
+                                "lastUsedDashboardAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "description": "Last seen active on Dashboard UI"
+                                },
+                                "authentication": {
+                                    "type": "object",
+                                    "properties": {
+                                        "mode": {
+                                            "type": "string",
+                                            "description": "Authentication mode"
+                                        },
+                                        "api": {
+                                            "type": "object",
+                                            "properties": {
+                                                "key": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "created": {
+                                                            "type": "boolean",
+                                                            "description": "If API key is created for this user"
+                                                        }
+                                                    },
+                                                    "description": "API key"
+                                                }
+                                            },
+                                            "description": "API authentication"
+                                        },
+                                        "twoFactor": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "description": "If twoFactor authentication is enabled for this user"
+                                                }
+                                            },
+                                            "description": "TwoFactor authentication"
+                                        },
+                                        "saml": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "description": "If SAML authentication is enabled for this user"
+                                                }
+                                            },
+                                            "description": "SAML authentication"
+                                        }
+                                    },
+                                    "description": "Authentication info"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "name": "Miles Meraki",
+                                "email": "miles@meraki.com",
+                                "lastUsedDashboardAt": "2018-02-11T00:00:00.090210Z",
+                                "authentication": {
+                                    "mode": "email",
+                                    "api": {
+                                        "key": {
+                                            "created": true
+                                        }
+                                    },
+                                    "twoFactor": {
+                                        "enabled": false
+                                    },
+                                    "saml": {
+                                        "enabled": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Returns the identity of the current user.",
+                "tags": [
+                    "administered",
+                    "monitor",
+                    "identities",
+                    "me"
+                ]
+            }
+        },
+        "/devices/{serial}": {
+            "get": {
+                "description": "Return a single device",
+                "operationId": "getDevice",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "name": "My AP",
+                                "lat": 37.4180951010362,
+                                "lng": -122.098531723022,
+                                "serial": "Q234-ABCD-5678",
+                                "mac": "00:11:22:33:44:55",
+                                "model": "MR34",
+                                "address": "1600 Pennsylvania Ave",
+                                "notes": "My AP's note",
+                                "lanIp": "1.2.3.4",
+                                "tags": [
+                                    "recently-added"
+                                ],
+                                "networkId": "N_24329156",
+                                "beaconIdParams": {
+                                    "uuid": "00000000-0000-0000-0000-000000000000",
+                                    "major": 5,
+                                    "minor": 3
+                                },
+                                "firmware": "wireless-25-14",
+                                "floorPlanId": "g_1234567"
+                            }
+                        }
+                    }
+                },
+                "summary": "Return a single device",
+                "tags": [
+                    "devices",
+                    "configure"
+                ]
+            },
+            "put": {
+                "description": "Update the attributes of a device",
+                "operationId": "updateDevice",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "updateDevice",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "The name of a device"
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "description": "The list of tags of a device"
+                                },
+                                "lat": {
+                                    "type": "number",
+                                    "format": "float",
+                                    "description": "The latitude of a device"
+                                },
+                                "lng": {
+                                    "type": "number",
+                                    "format": "float",
+                                    "description": "The longitude of a device"
+                                },
+                                "address": {
+                                    "type": "string",
+                                    "description": "The address of a device"
+                                },
+                                "notes": {
+                                    "type": "string",
+                                    "description": "The notes for the device. String. Limited to 255 characters."
+                                },
+                                "moveMapMarker": {
+                                    "type": "boolean",
+                                    "description": "Whether or not to set the latitude and longitude of a device based on the new address. Only applies when lat and lng are not specified."
+                                },
+                                "switchProfileId": {
+                                    "type": "string",
+                                    "description": "The ID of a switch profile to bind to the device (for available switch profiles, see the 'Switch Profiles' endpoint). Use null to unbind the switch device from the current profile. For a device to be bindable to a switch profile, it must (1) be a switch, and (2) belong to a network that is bound to a configuration template."
+                                },
+                                "floorPlanId": {
+                                    "type": "string",
+                                    "description": "The floor plan to associate to this device. null disassociates the device from the floorplan."
+                                }
+                            },
+                            "example": {
+                                "name": "My AP",
+                                "lat": 37.4180951010362,
+                                "lng": -122.098531723022,
+                                "serial": "Q234-ABCD-5678",
+                                "mac": "00:11:22:33:44:55",
+                                "tags": [
+                                    "recently-added"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "name": "My AP",
+                                "lat": 37.4180951010362,
+                                "lng": -122.098531723022,
+                                "serial": "Q234-ABCD-5678",
+                                "mac": "00:11:22:33:44:55",
+                                "model": "MR34",
+                                "address": "1600 Pennsylvania Ave",
+                                "notes": "My AP's note",
+                                "lanIp": "1.2.3.4",
+                                "tags": [
+                                    "recently-added"
+                                ],
+                                "networkId": "N_24329156",
+                                "beaconIdParams": {
+                                    "uuid": "00000000-0000-0000-0000-000000000000",
+                                    "major": 5,
+                                    "minor": 3
+                                },
+                                "firmware": "wireless-25-14",
+                                "floorPlanId": "g_1234567"
+                            }
+                        }
+                    }
+                },
+                "summary": "Update the attributes of a device",
+                "tags": [
+                    "devices",
+                    "configure"
+                ]
+            }
+        },
+        "/devices/{serial}/appliance/dhcp/subnets": {
+            "get": {
+                "description": "Return the DHCP subnet information for an appliance",
+                "operationId": "getDeviceApplianceDhcpSubnets",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        },
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "subnet": "192.168.1.0/24",
+                                    "vlanId": 100,
+                                    "usedCount": 2,
+                                    "freeCount": 251
+                                }
+                            ]
+                        }
+                    }
+                },
+                "summary": "Return the DHCP subnet information for an appliance",
+                "tags": [
+                    "appliance",
+                    "monitor",
+                    "dhcp",
+                    "subnets"
+                ]
+            }
+        },
+        "/devices/{serial}/appliance/performance": {
+            "get": {
+                "description": "Return the performance score for a single MX. Only primary MX devices supported. If no data is available, a 204 error code is returned.",
+                "operationId": "getDeviceAppliancePerformance",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "perfScore": 10
+                            }
+                        }
+                    }
+                },
+                "summary": "Return the performance score for a single MX",
+                "tags": [
+                    "appliance",
+                    "monitor",
+                    "performance"
+                ]
+            }
+        },
+        "/devices/{serial}/appliance/prefixes/delegated": {
+            "get": {
+                "description": "Return current delegated IPv6 prefixes on an appliance.",
+                "operationId": "getDeviceAppliancePrefixesDelegated",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        },
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "origin": {
+                                        "interface": "wan1"
+                                    },
+                                    "prefix": "2001:db8:3c4d:15::/64",
+                                    "counts": {
+                                        "assigned": 2,
+                                        "available": 253
+                                    },
+                                    "method": "auto",
+                                    "description": "My ISP provider",
+                                    "isPreferred": true,
+                                    "expiresAt": "2018-05-12T00:00:00Z"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "summary": "Return current delegated IPv6 prefixes on an appliance.",
+                "tags": [
+                    "appliance",
+                    "monitor",
+                    "prefixes",
+                    "delegated"
+                ]
+            }
+        },
+        "/devices/{serial}/appliance/prefixes/delegated/vlanAssignments": {
+            "get": {
+                "description": "Return prefixes assigned to all IPv6 enabled VLANs on an appliance.",
+                "operationId": "getDeviceAppliancePrefixesDelegatedVlanAssignments",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        },
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "vlan": {
+                                        "id": 100,
+                                        "name": "My VLAN"
+                                    },
+                                    "origin": {
+                                        "interface": "wan1",
+                                        "prefix": "2001:db8:3c4d:15::/64"
+                                    },
+                                    "status": "Active",
+                                    "ipv6": {
+                                        "prefix": "2001:db8:3c4d:15::/64",
+                                        "address": "2001:db8:3c4d:15::1",
+                                        "linkLocal": {
+                                            "address": "2001:db8:3c4d:15::1"
+                                        },
+                                        "solicitedNodeMulticast": {
+                                            "address": "2001:db8:3c4d:15::1"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "summary": "Return prefixes assigned to all IPv6 enabled VLANs on an appliance.",
+                "tags": [
+                    "appliance",
+                    "monitor",
+                    "prefixes",
+                    "delegated",
+                    "vlanAssignments"
+                ]
+            }
+        },
+        "/devices/{serial}/appliance/uplinks/settings": {
+            "get": {
+                "description": "Return the uplink settings for an MX appliance",
+                "operationId": "getDeviceApplianceUplinksSettings",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "interfaces": {
+                                    "type": "object",
+                                    "properties": {
+                                        "wan1": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "description": "Enable or disable the interface."
+                                                },
+                                                "vlanTagging": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether VLAN tagging is enabled."
+                                                        },
+                                                        "vlanId": {
+                                                            "type": "integer",
+                                                            "description": "The ID of the VLAN to use for VLAN tagging."
+                                                        }
+                                                    },
+                                                    "description": "VLAN tagging settings."
+                                                },
+                                                "svis": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "ipv4": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "IP address and subnet mask when in static mode."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Gateway IP address when in static mode."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv4 settings for static/dynamic mode."
+                                                        },
+                                                        "ipv6": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "Static address that will override the one(s) received by SLAAC."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Static gateway that will override the one received by autoconf."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv6 settings for static/dynamic mode."
+                                                        }
+                                                    },
+                                                    "description": "SVI settings by protocol."
+                                                },
+                                                "pppoe": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether PPPoE is enabled."
+                                                        },
+                                                        "authentication": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "enabled": {
+                                                                    "type": "boolean",
+                                                                    "description": "Whether PPPoE authentication is enabled."
+                                                                },
+                                                                "username": {
+                                                                    "type": "string",
+                                                                    "description": "Username for PPPoE authentication."
+                                                                }
+                                                            },
+                                                            "description": "Settings for PPPoE Authentication."
+                                                        }
+                                                    },
+                                                    "description": "Configuration options for PPPoE."
+                                                }
+                                            },
+                                            "description": "WAN 1 settings."
+                                        },
+                                        "wan2": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "description": "Enable or disable the interface."
+                                                },
+                                                "vlanTagging": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether VLAN tagging is enabled."
+                                                        },
+                                                        "vlanId": {
+                                                            "type": "integer",
+                                                            "description": "The ID of the VLAN to use for VLAN tagging."
+                                                        }
+                                                    },
+                                                    "description": "VLAN tagging settings."
+                                                },
+                                                "svis": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "ipv4": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "IP address and subnet mask when in static mode."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Gateway IP address when in static mode."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv4 settings for static/dynamic mode."
+                                                        },
+                                                        "ipv6": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "Static address that will override the one(s) received by SLAAC."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Static gateway that will override the one received by autoconf."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv6 settings for static/dynamic mode."
+                                                        }
+                                                    },
+                                                    "description": "SVI settings by protocol."
+                                                },
+                                                "pppoe": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether PPPoE is enabled."
+                                                        },
+                                                        "authentication": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "enabled": {
+                                                                    "type": "boolean",
+                                                                    "description": "Whether PPPoE authentication is enabled."
+                                                                },
+                                                                "username": {
+                                                                    "type": "string",
+                                                                    "description": "Username for PPPoE authentication."
+                                                                }
+                                                            },
+                                                            "description": "Settings for PPPoE Authentication."
+                                                        }
+                                                    },
+                                                    "description": "Configuration options for PPPoE."
+                                                }
+                                            },
+                                            "description": "WAN 2 settings."
+                                        }
+                                    },
+                                    "description": "Interface settings."
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "interfaces": {
+                                    "wan1": {
+                                        "enabled": true,
+                                        "vlanTagging": {
+                                            "enabled": true,
+                                            "vlanId": 1
+                                        },
+                                        "svis": {
+                                            "ipv4": {
+                                                "assignmentMode": "static",
+                                                "address": "9.10.11.10/16",
+                                                "gateway": "13.14.15.16",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1.2.3.4"
+                                                    ]
+                                                }
+                                            },
+                                            "ipv6": {
+                                                "assignmentMode": "static",
+                                                "address": "1:2:3::4",
+                                                "gateway": "1:2:3::5",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1001:4860:4860::8888",
+                                                        "1001:4860:4860::8844"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "pppoe": {
+                                            "enabled": true,
+                                            "authentication": {
+                                                "enabled": true,
+                                                "username": "username"
+                                            }
+                                        }
+                                    },
+                                    "wan2": {
+                                        "enabled": true,
+                                        "vlanTagging": {
+                                            "enabled": true,
+                                            "vlanId": 1
+                                        },
+                                        "svis": {
+                                            "ipv4": {
+                                                "assignmentMode": "static",
+                                                "address": "9.10.11.10/16",
+                                                "gateway": "13.14.15.16",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1.2.3.4"
+                                                    ]
+                                                }
+                                            },
+                                            "ipv6": {
+                                                "assignmentMode": "static",
+                                                "address": "1:2:3::4",
+                                                "gateway": "1:2:3::5",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1001:4860:4860::8888",
+                                                        "1001:4860:4860::8844"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "pppoe": {
+                                            "enabled": true,
+                                            "authentication": {
+                                                "enabled": true,
+                                                "username": "username"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Return the uplink settings for an MX appliance",
+                "tags": [
+                    "appliance",
+                    "configure",
+                    "uplinks",
+                    "settings"
+                ]
+            },
+            "put": {
+                "description": "Update the uplink settings for an MX appliance",
+                "operationId": "updateDeviceApplianceUplinksSettings",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "updateDeviceApplianceUplinksSettings",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "interfaces": {
+                                    "type": "object",
+                                    "properties": {
+                                        "wan1": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "description": "Enable or disable the interface."
+                                                },
+                                                "vlanTagging": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether VLAN tagging is enabled."
+                                                        },
+                                                        "vlanId": {
+                                                            "type": "integer",
+                                                            "description": "The ID of the VLAN to use for VLAN tagging."
+                                                        }
+                                                    },
+                                                    "description": "VLAN tagging settings."
+                                                },
+                                                "svis": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "ipv4": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "IP address and subnet mask when in static mode."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Gateway IP address when in static mode."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv4 settings for static/dynamic mode."
+                                                        },
+                                                        "ipv6": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "Static address that will override the one(s) received by SLAAC."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Static gateway that will override the one received by autoconf."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv6 settings for static/dynamic mode."
+                                                        }
+                                                    },
+                                                    "description": "SVI settings by protocol."
+                                                },
+                                                "pppoe": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether PPPoE is enabled."
+                                                        },
+                                                        "authentication": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "enabled": {
+                                                                    "type": "boolean",
+                                                                    "description": "Whether PPPoE authentication is enabled."
+                                                                },
+                                                                "username": {
+                                                                    "type": "string",
+                                                                    "description": "Username for PPPoE authentication."
+                                                                },
+                                                                "password": {
+                                                                    "type": "string",
+                                                                    "description": "Password for PPPoE authentication. This parameter is not returned."
+                                                                }
+                                                            },
+                                                            "description": "Settings for PPPoE Authentication."
+                                                        }
+                                                    },
+                                                    "description": "Configuration options for PPPoE."
+                                                }
+                                            },
+                                            "description": "WAN 1 settings."
+                                        },
+                                        "wan2": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "description": "Enable or disable the interface."
+                                                },
+                                                "vlanTagging": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether VLAN tagging is enabled."
+                                                        },
+                                                        "vlanId": {
+                                                            "type": "integer",
+                                                            "description": "The ID of the VLAN to use for VLAN tagging."
+                                                        }
+                                                    },
+                                                    "description": "VLAN tagging settings."
+                                                },
+                                                "svis": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "ipv4": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "IP address and subnet mask when in static mode."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Gateway IP address when in static mode."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv4 settings for static/dynamic mode."
+                                                        },
+                                                        "ipv6": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "Static address that will override the one(s) received by SLAAC."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Static gateway that will override the one received by autoconf."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv6 settings for static/dynamic mode."
+                                                        }
+                                                    },
+                                                    "description": "SVI settings by protocol."
+                                                },
+                                                "pppoe": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether PPPoE is enabled."
+                                                        },
+                                                        "authentication": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "enabled": {
+                                                                    "type": "boolean",
+                                                                    "description": "Whether PPPoE authentication is enabled."
+                                                                },
+                                                                "username": {
+                                                                    "type": "string",
+                                                                    "description": "Username for PPPoE authentication."
+                                                                },
+                                                                "password": {
+                                                                    "type": "string",
+                                                                    "description": "Password for PPPoE authentication. This parameter is not returned."
+                                                                }
+                                                            },
+                                                            "description": "Settings for PPPoE Authentication."
+                                                        }
+                                                    },
+                                                    "description": "Configuration options for PPPoE."
+                                                }
+                                            },
+                                            "description": "WAN 2 settings."
+                                        }
+                                    },
+                                    "description": "Interface settings."
+                                }
+                            },
+                            "example": {
+                                "interfaces": {
+                                    "wan1": {
+                                        "enabled": true,
+                                        "vlanTagging": {
+                                            "enabled": true,
+                                            "vlanId": 1
+                                        },
+                                        "svis": {
+                                            "ipv4": {
+                                                "assignmentMode": "static",
+                                                "address": "9.10.11.10/16",
+                                                "gateway": "13.14.15.16",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1.2.3.4"
+                                                    ]
+                                                }
+                                            },
+                                            "ipv6": {
+                                                "assignmentMode": "static",
+                                                "address": "1:2:3::4",
+                                                "gateway": "1:2:3::5",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1001:4860:4860::8888",
+                                                        "1001:4860:4860::8844"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "pppoe": {
+                                            "enabled": true,
+                                            "authentication": {
+                                                "enabled": true,
+                                                "username": "username",
+                                                "password": "password"
+                                            }
+                                        }
+                                    },
+                                    "wan2": {
+                                        "enabled": true,
+                                        "vlanTagging": {
+                                            "enabled": true,
+                                            "vlanId": 1
+                                        },
+                                        "svis": {
+                                            "ipv4": {
+                                                "assignmentMode": "static",
+                                                "address": "9.10.11.10/16",
+                                                "gateway": "13.14.15.16",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1.2.3.4"
+                                                    ]
+                                                }
+                                            },
+                                            "ipv6": {
+                                                "assignmentMode": "static",
+                                                "address": "1:2:3::4",
+                                                "gateway": "1:2:3::5",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1001:4860:4860::8888",
+                                                        "1001:4860:4860::8844"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "pppoe": {
+                                            "enabled": true,
+                                            "authentication": {
+                                                "enabled": true,
+                                                "username": "username",
+                                                "password": "password"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "required": [
+                                "interfaces"
+                            ]
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "interfaces": {
+                                    "type": "object",
+                                    "properties": {
+                                        "wan1": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "description": "Enable or disable the interface."
+                                                },
+                                                "vlanTagging": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether VLAN tagging is enabled."
+                                                        },
+                                                        "vlanId": {
+                                                            "type": "integer",
+                                                            "description": "The ID of the VLAN to use for VLAN tagging."
+                                                        }
+                                                    },
+                                                    "description": "VLAN tagging settings."
+                                                },
+                                                "svis": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "ipv4": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "IP address and subnet mask when in static mode."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Gateway IP address when in static mode."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv4 settings for static/dynamic mode."
+                                                        },
+                                                        "ipv6": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "Static address that will override the one(s) received by SLAAC."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Static gateway that will override the one received by autoconf."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv6 settings for static/dynamic mode."
+                                                        }
+                                                    },
+                                                    "description": "SVI settings by protocol."
+                                                },
+                                                "pppoe": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether PPPoE is enabled."
+                                                        },
+                                                        "authentication": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "enabled": {
+                                                                    "type": "boolean",
+                                                                    "description": "Whether PPPoE authentication is enabled."
+                                                                },
+                                                                "username": {
+                                                                    "type": "string",
+                                                                    "description": "Username for PPPoE authentication."
+                                                                }
+                                                            },
+                                                            "description": "Settings for PPPoE Authentication."
+                                                        }
+                                                    },
+                                                    "description": "Configuration options for PPPoE."
+                                                }
+                                            },
+                                            "description": "WAN 1 settings."
+                                        },
+                                        "wan2": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean",
+                                                    "description": "Enable or disable the interface."
+                                                },
+                                                "vlanTagging": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether VLAN tagging is enabled."
+                                                        },
+                                                        "vlanId": {
+                                                            "type": "integer",
+                                                            "description": "The ID of the VLAN to use for VLAN tagging."
+                                                        }
+                                                    },
+                                                    "description": "VLAN tagging settings."
+                                                },
+                                                "svis": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "ipv4": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "IP address and subnet mask when in static mode."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Gateway IP address when in static mode."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv4 settings for static/dynamic mode."
+                                                        },
+                                                        "ipv6": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "assignmentMode": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "static",
+                                                                        "dynamic"
+                                                                    ],
+                                                                    "description": "The assignment mode for this SVI. Applies only when PPPoE is disabled."
+                                                                },
+                                                                "address": {
+                                                                    "type": "string",
+                                                                    "description": "Static address that will override the one(s) received by SLAAC."
+                                                                },
+                                                                "gateway": {
+                                                                    "type": "string",
+                                                                    "description": "Static gateway that will override the one received by autoconf."
+                                                                },
+                                                                "nameservers": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "addresses": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "string"
+                                                                            },
+                                                                            "description": "Up to 2 nameserver addresses to use, ordered in priority from highest to lowest priority."
+                                                                        }
+                                                                    },
+                                                                    "description": "The nameserver settings for this SVI."
+                                                                }
+                                                            },
+                                                            "description": "IPv6 settings for static/dynamic mode."
+                                                        }
+                                                    },
+                                                    "description": "SVI settings by protocol."
+                                                },
+                                                "pppoe": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "enabled": {
+                                                            "type": "boolean",
+                                                            "description": "Whether PPPoE is enabled."
+                                                        },
+                                                        "authentication": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "enabled": {
+                                                                    "type": "boolean",
+                                                                    "description": "Whether PPPoE authentication is enabled."
+                                                                },
+                                                                "username": {
+                                                                    "type": "string",
+                                                                    "description": "Username for PPPoE authentication."
+                                                                }
+                                                            },
+                                                            "description": "Settings for PPPoE Authentication."
+                                                        }
+                                                    },
+                                                    "description": "Configuration options for PPPoE."
+                                                }
+                                            },
+                                            "description": "WAN 2 settings."
+                                        }
+                                    },
+                                    "description": "Interface settings."
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "interfaces": {
+                                    "wan1": {
+                                        "enabled": true,
+                                        "vlanTagging": {
+                                            "enabled": true,
+                                            "vlanId": 1
+                                        },
+                                        "svis": {
+                                            "ipv4": {
+                                                "assignmentMode": "static",
+                                                "address": "9.10.11.10/16",
+                                                "gateway": "13.14.15.16",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1.2.3.4"
+                                                    ]
+                                                }
+                                            },
+                                            "ipv6": {
+                                                "assignmentMode": "static",
+                                                "address": "1:2:3::4",
+                                                "gateway": "1:2:3::5",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1001:4860:4860::8888",
+                                                        "1001:4860:4860::8844"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "pppoe": {
+                                            "enabled": true,
+                                            "authentication": {
+                                                "enabled": true,
+                                                "username": "username"
+                                            }
+                                        }
+                                    },
+                                    "wan2": {
+                                        "enabled": true,
+                                        "vlanTagging": {
+                                            "enabled": true,
+                                            "vlanId": 1
+                                        },
+                                        "svis": {
+                                            "ipv4": {
+                                                "assignmentMode": "static",
+                                                "address": "9.10.11.10/16",
+                                                "gateway": "13.14.15.16",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1.2.3.4"
+                                                    ]
+                                                }
+                                            },
+                                            "ipv6": {
+                                                "assignmentMode": "static",
+                                                "address": "1:2:3::4",
+                                                "gateway": "1:2:3::5",
+                                                "nameservers": {
+                                                    "addresses": [
+                                                        "1001:4860:4860::8888",
+                                                        "1001:4860:4860::8844"
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "pppoe": {
+                                            "enabled": true,
+                                            "authentication": {
+                                                "enabled": true,
+                                                "username": "username"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Update the uplink settings for an MX appliance",
+                "tags": [
+                    "appliance",
+                    "configure",
+                    "uplinks",
+                    "settings"
+                ]
+            }
+        },
+        "/devices/{serial}/appliance/vmx/authenticationToken": {
+            "post": {
+                "description": "Generate a new vMX authentication token",
+                "operationId": "createDeviceApplianceVmxAuthenticationToken",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "token": {
+                                    "type": "string",
+                                    "description": "The newly generated authentication token for the vMX instance"
+                                },
+                                "expiresAt": {
+                                    "type": "string",
+                                    "description": "The expiration time for the token, in ISO 8601 format"
+                                }
+                            }
+                        },
+                        "examples": {
+                            "application/json": {
+                                "token": "ffc0b7b578b61be5bd1d172132c78044/9af03bd84d474",
+                                "expiresAt": "2021-06-18T12:40:10Z"
+                            }
+                        }
+                    }
+                },
+                "summary": "Generate a new vMX authentication token",
+                "tags": [
+                    "appliance",
+                    "configure",
+                    "vmx",
+                    "authenticationToken"
+                ]
+            }
+        },
+        "/devices/{serial}/blinkLeds": {
+            "post": {
+                "description": "Blink the LEDs on a device",
+                "operationId": "blinkDeviceLeds",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "blinkDeviceLeds",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "duration": {
+                                    "type": "integer",
+                                    "description": "The duration in seconds. Must be between 5 and 120. Default is 20 seconds"
+                                },
+                                "period": {
+                                    "type": "integer",
+                                    "description": "The period in milliseconds. Must be between 100 and 1000. Default is 160 milliseconds"
+                                },
+                                "duty": {
+                                    "type": "integer",
+                                    "description": "The duty cycle as the percent active. Must be between 10 and 90. Default is 50."
+                                }
+                            },
+                            "example": {
+                                "duration": 20,
+                                "period": 160,
+                                "duty": 50
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "duration": 20,
+                                "period": 160,
+                                "duty": 50
+                            }
+                        }
+                    }
+                },
+                "summary": "Blink the LEDs on a device",
+                "tags": [
+                    "devices",
+                    "liveTools"
+                ]
+            }
+        },
+        "/devices/{serial}/camera/analytics/live": {
+            "get": {
+                "description": "Returns live state from camera of analytics zones",
+                "operationId": "getDeviceCameraAnalyticsLive",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "ts": "2018-08-15T18:32:38.123Z",
+                                "zones": {
+                                    "0": {
+                                        "person": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Returns live state from camera of analytics zones",
+                "tags": [
+                    "camera",
+                    "monitor",
+                    "analytics",
+                    "live"
+                ]
+            }
+        },
+        "/devices/{serial}/camera/analytics/overview": {
+            "get": {
+                "description": "Returns an overview of aggregate analytics data for a timespan",
+                "operationId": "getDeviceCameraAnalyticsOverview",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "t0",
+                        "in": "query",
+                        "description": "The beginning of the timespan for the data. The maximum lookback period is 365 days from today."
+                    },
+                    {
+                        "type": "string",
+                        "name": "t1",
+                        "in": "query",
+                        "description": "The end of the timespan for the data. t1 can be a maximum of 7 days after t0."
+                    },
+                    {
+                        "type": "number",
+                        "format": "float",
+                        "name": "timespan",
+                        "in": "query",
+                        "description": "The timespan for which the information will be fetched. If specifying timespan, do not specify parameters t0 and t1. The value must be in seconds and be less than or equal to 7 days. The default is 1 hour."
+                    },
+                    {
+                        "type": "string",
+                        "enum": [
+                            "person",
+                            "vehicle"
+                        ],
+                        "name": "objectType",
+                        "in": "query",
+                        "description": "[optional] The object type for which analytics will be retrieved. The default object type is person. The available types are [person, vehicle]."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        },
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "startTs": "2018-08-15T18:32:38.123Z",
+                                    "endTs": "2018-08-15T18:33:38.123Z",
+                                    "zoneId": 0,
+                                    "entrances": 254,
+                                    "averageCount": 5
+                                }
+                            ]
+                        }
+                    }
+                },
+                "summary": "Returns an overview of aggregate analytics data for a timespan",
+                "tags": [
+                    "camera",
+                    "monitor",
+                    "analytics",
+                    "overview"
+                ]
+            }
+        },
+        "/devices/{serial}/camera/analytics/recent": {
+            "get": {
+                "description": "Returns most recent record for analytics zones",
+                "operationId": "getDeviceCameraAnalyticsRecent",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "enum": [
+                            "person",
+                            "vehicle"
+                        ],
+                        "name": "objectType",
+                        "in": "query",
+                        "description": "[optional] The object type for which analytics will be retrieved. The default object type is person. The available types are [person, vehicle]."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        },
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "startTs": "2018-08-15T18:32:38.123Z",
+                                    "endTs": "2018-08-15T18:33:38.123Z",
+                                    "zoneId": 0,
+                                    "entrances": 10,
+                                    "averageCount": 2.54
+                                }
+                            ]
+                        }
+                    }
+                },
+                "summary": "Returns most recent record for analytics zones",
+                "tags": [
+                    "camera",
+                    "monitor",
+                    "analytics",
+                    "recent"
+                ]
+            }
+        },
+        "/devices/{serial}/camera/analytics/zones": {
+            "get": {
+                "description": "Returns all configured analytic zones for this camera",
+                "operationId": "getDeviceCameraAnalyticsZones",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        },
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "id": "0",
+                                    "type": "occupancy",
+                                    "label": "Full Frame",
+                                    "regionOfInterest": {
+                                        "x0": "0.00",
+                                        "y0": "0.00",
+                                        "x1": "1.00",
+                                        "y1": "1.00"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "summary": "Returns all configured analytic zones for this camera",
+                "tags": [
+                    "camera",
+                    "monitor",
+                    "analytics",
+                    "zones"
+                ]
+            }
+        },
+        "/devices/{serial}/camera/analytics/zones/{zoneId}/history": {
+            "get": {
+                "description": "Return historical records for analytic zones",
+                "operationId": "getDeviceCameraAnalyticsZoneHistory",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "zoneId",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "t0",
+                        "in": "query",
+                        "description": "The beginning of the timespan for the data. The maximum lookback period is 365 days from today."
+                    },
+                    {
+                        "type": "string",
+                        "name": "t1",
+                        "in": "query",
+                        "description": "The end of the timespan for the data. t1 can be a maximum of 14 hours after t0."
+                    },
+                    {
+                        "type": "number",
+                        "format": "float",
+                        "name": "timespan",
+                        "in": "query",
+                        "description": "The timespan for which the information will be fetched. If specifying timespan, do not specify parameters t0 and t1. The value must be in seconds and be less than or equal to 14 hours. The default is 1 hour."
+                    },
+                    {
+                        "type": "integer",
+                        "name": "resolution",
+                        "in": "query",
+                        "description": "The time resolution in seconds for returned data. The valid resolutions are: 60. The default is 60."
+                    },
+                    {
+                        "type": "string",
+                        "enum": [
+                            "person",
+                            "vehicle"
+                        ],
+                        "name": "objectType",
+                        "in": "query",
+                        "description": "[optional] The object type for which analytics will be retrieved. The default object type is person. The available types are [person, vehicle]."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        },
+                        "examples": {
+                            "application/json": [
+                                {
+                                    "startTs": "2018-08-15T18:32:38.123Z",
+                                    "endTs": "2018-08-15T18:33:38.123Z",
+                                    "entrances": 5,
+                                    "averageCount": 1.5
+                                }
+                            ]
+                        }
+                    }
+                },
+                "summary": "Return historical records for analytic zones",
+                "tags": [
+                    "camera",
+                    "monitor",
+                    "analytics",
+                    "zones",
+                    "history"
+                ]
+            }
+        },
+        "/devices/{serial}/camera/customAnalytics": {
+            "get": {
+                "description": "Return custom analytics settings for a camera",
+                "operationId": "getDeviceCameraCustomAnalytics",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "enabled": true,
+                                "artifactId": "1",
+                                "parameters": [
+                                    {
+                                        "name": "detection_threshold",
+                                        "value": 0.5
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "summary": "Return custom analytics settings for a camera",
+                "tags": [
+                    "camera",
+                    "configure",
+                    "customAnalytics"
+                ]
+            },
+            "put": {
+                "description": "Update custom analytics settings for a camera",
+                "operationId": "updateDeviceCameraCustomAnalytics",
+                "parameters": [
+                    {
+                        "name": "serial",
+                        "in": "path",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "updateDeviceCameraCustomAnalytics",
+                        "in": "body",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable custom analytics"
+                                },
+                                "artifactId": {
+                                    "type": "string",
+                                    "description": "The ID of the custom analytics artifact"
+                                },
+                                "parameters": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Name of the parameter"
+                                            },
+                                            "value": {
+                                                "type": "string",
+                                                "description": "Value of the parameter"
+                                            }
+                                        },
+                                        "required": [
+                                            "name",
+                                            "value"
+                                        ]
+                                    },
+                                    "description": "Parameters for the custom analytics workload"
+                                }
+                            },
+                            "example": {
+                                "enabled": true,
+                                "artifactId": "1",
+                                "parameters": [
+                                    {
+                                        "name": "detection_threshold",
+                                        "value": "0.5"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "examples": {
+                            "application/json": {
+                                "enabled": true,
+                                "artifactId": "1",
+                                "parameters": [
+                                    {
+                                        "name": "detection_threshold",
+                                        "value": 0.5
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "summary": "Update custom analytics settings for a camera",
+                "tags": [
+                    "camera",
+                    "configure",
+                    "customAnalytics"
+                ]
+            }
+        }
+    }
+}
