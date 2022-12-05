@@ -30,7 +30,7 @@ LIVE TOOL endpoints will directly interact with the device
 More details https://developer.cisco.com/meraki/api-latest/#!introduction/whats-new-in-v1
 ```
 
-![Cisco Meraki](images/meraki.png)
+![Cisco Meraki](images/meraki-image.png)
 
 ```
 This Connector API exposes REST API endpoints to perform any operations on Cisco Meraki v1 API in a simple, quick and intuitive fashion.
